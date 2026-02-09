@@ -41,3 +41,17 @@ Category tab test
 <img width="1286" height="761" alt="Screenshot 2026-02-08 at 20 01 13" src="https://github.com/user-attachments/assets/a5593226-ace7-4f42-a807-14be28609679" />
 
 Category tab test #2
+
+<img width="1030" height="793" alt="Screenshot 2026-02-09 at 20 33 10" src="https://github.com/user-attachments/assets/b9828b11-a506-4c82-9f7a-8d358cce9b18" />
+
+Updated UI
+
+<img width="1030" height="793" alt="Screenshot 2026-02-09 at 20 33 35" src="https://github.com/user-attachments/assets/1070babb-69f1-4ae4-a8c3-7a32023c18cf" />
+
+Heart Option
+
+<img width="1030" height="793" alt="Screenshot 2026-02-09 at 20 33 49" src="https://github.com/user-attachments/assets/dc9ab8fd-7c08-47e1-9ad6-701d5883bc21" />
+
+Catalog,About,Contact container + search bar improved
+
+
