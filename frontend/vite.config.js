@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
+import { fileURLToPath } from 'url'
+import { dirname, resolve } from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 export default defineConfig({
   plugins: [react()],
@@ -17,15 +21,13 @@ export default defineConfig({
 
   server: {
     port: 5173,
-    host: true, // Listen on all addresses
-    open: true, // Auto-open browser
+    host: true,
+    open: true,
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
-        // Optional: rewrite path if needed
-        // rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   },
@@ -36,12 +38,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Split vendor chunks for better caching
           'react-vendor': ['react', 'react-dom'],
         },
       },
     },
-    // Increase chunk size warning limit if needed
     chunkSizeWarningLimit: 1000,
   },
 
@@ -50,7 +50,6 @@ export default defineConfig({
     host: true,
   },
 
-  // Optimize dependencies
   optimizeDeps: {
     include: ['react', 'react-dom'],
   },

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import { categoryService } from './categoryService'
 import { productService } from './productService'
 import CategoryList from './CategoryList'
@@ -16,6 +16,15 @@ function App() {
   const [error, setError] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOrder, setSortOrder] = useState('default')
+  const [showTop, setShowTop] = useState(false)
+  const [toast, setToast] = useState('')
+
+  // Back-to-top visibility
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > 400)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     loadCategories()
@@ -67,6 +76,17 @@ function App() {
     setSearchQuery(query)
   }
 
+  const showToast = useCallback(message => {
+    setToast(message)
+    setTimeout(() => setToast(''), 2500)
+  }, [])
+
+  const handleAddToCart = useCallback(product => {
+    if (product?.name) {
+      showToast(`"${product.name}" added to cart`)
+    }
+  }, [showToast])
+
   const filteredProducts = useMemo(() => {
     const normalized = searchQuery.trim().toLowerCase()
     if (!normalized) return products
@@ -95,60 +115,76 @@ function App() {
   const activeCategory = categories.find(category => category.id === selectedCategory)
 
   return (
-    <div className="app">
-      <Header />
+      <div className="app">
+        <Header />
 
-      <main className="main-content">
-        <CategoryList
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onCategorySelect={handleCategorySelect}
-          loading={loadingCategories}
-        />
+        <main className="main-content">
+          <CategoryList
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategorySelect={handleCategorySelect}
+              loading={loadingCategories}
+          />
 
-        <div className="controls">
-          <SearchBar value={searchQuery} onSearch={handleSearch} />
-          <label className="sort-control">
-            <span>Sort by</span>
-            <select
-              className="sort-select"
-              value={sortOrder}
-              onChange={event => setSortOrder(event.target.value)}
-            >
-              <option value="default">Default</option>
-              <option value="price-asc">Price: low to high</option>
-              <option value="price-desc">Price: high to low</option>
-              <option value="name-asc">Name: A → Z</option>
-              <option value="name-desc">Name: Z → A</option>
-            </select>
-          </label>
-        </div>
-
-        <div className="section-header">
-          <div>
-            <h2>{activeCategory ? `${activeCategory.name} Products` : 'Products'}</h2>
-            <p className="section-subtitle">
-              {loadingProducts
-                ? 'Loading products…'
-                : `${sortedProducts.length} product${sortedProducts.length === 1 ? '' : 's'} found`}
-            </p>
+          <div className="controls">
+            <SearchBar value={searchQuery} onSearch={handleSearch} />
+            <label className="sort-control">
+              <span>Sort by</span>
+              <select
+                  className="sort-select"
+                  value={sortOrder}
+                  onChange={event => setSortOrder(event.target.value)}
+              >
+                <option value="default">Default</option>
+                <option value="price-asc">Price: low to high</option>
+                <option value="price-desc">Price: high to low</option>
+                <option value="name-asc">Name: A - Z</option>
+                <option value="name-desc">Name: Z - A</option>
+              </select>
+            </label>
           </div>
-        </div>
 
-        {error ? (
-          <div className="error-message">
-            <p>{error}</p>
-            <button onClick={loadCategories}>Retry</button>
+          <div className="section-header">
+            <div>
+              <h2>{activeCategory ? `${activeCategory.name} Products` : 'Products'}</h2>
+              <p className="section-subtitle">
+                {loadingProducts
+                    ? 'Loading products...'
+                    : `${sortedProducts.length} product${sortedProducts.length === 1 ? '' : 's'} found`}
+              </p>
+            </div>
           </div>
-        ) : null}
 
-        {loadingProducts ? (
-          <div className="loading">Loading products…</div>
-        ) : (
-          <ProductGrid products={sortedProducts} />
-        )}
-      </main>
-    </div>
+          {error ? (
+              <div className="error-message">
+                <p>{error}</p>
+                <button onClick={loadCategories}>Retry</button>
+              </div>
+          ) : null}
+
+          {loadingProducts ? (
+              <div className="loading">Loading products...</div>
+          ) : (
+              <ProductGrid products={sortedProducts} onAddToCart={handleAddToCart} />
+          )}
+        </main>
+
+        <footer className="app-footer">
+          Built with React + Vite &middot; <span>Vlados Shop</span> &copy; 2026
+        </footer>
+
+        {/* Back to top */}
+        <button
+            className={`back-to-top ${showTop ? 'visible' : ''}`}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            aria-label="Back to top"
+        >
+          &#8593;
+        </button>
+
+        {/* Toast notification */}
+        <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
+      </div>
   )
 }
 

@@ -1,22 +1,37 @@
 .category-list {
-  background: white;
-  border-radius: 14px;
-  padding: 18px 20px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 .category-title {
-  font-size: 1.1rem;
-  color: #1f2937;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--color-text-muted);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-count {
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
   font-weight: 600;
 }
 
 .category-empty {
-  color: #6b7280;
-  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
 }
 
 .category-chips {
@@ -26,26 +41,59 @@
 }
 
 .category-button {
-  border: 1px solid transparent;
-  border-radius: 999px;
-  padding: 10px 18px;
-  background: #f8fafc;
-  color: #374151;
-  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  padding: 10px 20px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-weight: 500;
+  font-family: inherit;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition);
+  animation: chipIn 0.3s ease both;
 }
 
 .category-button:hover {
-  border-color: #667eea;
-  color: #4338ca;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: rgba(102, 126, 234, 0.06);
+  transform: translateY(-1px);
 }
 
 .category-button.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   color: white;
   border-color: transparent;
-  box-shadow: 0 8px 18px rgba(102, 126, 234, 0.3);
+  box-shadow: var(--shadow-primary);
+  transform: scale(1.02);
+}
+
+/* Skeleton */
+.category-skeleton {
+  display: inline-block;
+  width: 90px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, #eee 25%, #e0e0e0 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes chipIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 @media (max-width: 768px) {
@@ -53,8 +101,16 @@
     padding: 16px;
   }
 
+  .category-chips {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .category-button {
-    padding: 8px 14px;
-    font-size: 0.9rem;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    flex-shrink: 0;
   }
 }

@@ -3,6 +3,7 @@ import './SearchBar.css'
 
 function SearchBar({ value, onSearch }) {
   const [localValue, setLocalValue] = useState(value)
+  const [focused, setFocused] = useState(false)
 
   useEffect(() => {
     setLocalValue(value)
@@ -19,19 +20,34 @@ function SearchBar({ value, onSearch }) {
     onSearch(newValue)
   }
 
+  const handleClear = () => {
+    setLocalValue('')
+    onSearch('')
+  }
+
   return (
-    <form className="search-bar" onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Search products in this category..."
-        value={localValue}
-        onChange={handleChange}
-      />
-      <button type="submit" className="search-button">
-        Search
-      </button>
-    </form>
+      <form className={`search-bar ${focused ? 'search-bar--focused' : ''}`} onSubmit={handleSubmit}>
+        <div className="search-input-wrapper">
+          <span className="search-icon">&#128269;</span>
+          <input
+              type="text"
+              className="search-input"
+              placeholder="Search products in this category..."
+              value={localValue}
+              onChange={handleChange}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+          />
+          {localValue && (
+              <button type="button" className="search-clear" onClick={handleClear} aria-label="Clear search">
+                &times;
+              </button>
+          )}
+        </div>
+        <button type="submit" className="search-button">
+          Search
+        </button>
+      </form>
   )
 }
 
